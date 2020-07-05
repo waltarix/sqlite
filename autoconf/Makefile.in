@@ -67,6 +67,8 @@ LDFLAGS.rpath = @LDFLAGS_RPATH@
 LDFLAGS.pthread = @LDFLAGS_PTHREAD@
 LDFLAGS.dlopen = @LDFLAGS_DLOPEN@
 LDFLAGS.readline = @LDFLAGS_READLINE@
+LDFLAGS.migemo = @LDFLAGS_MIGEMO@
+LDFLAGS.pcre2 = @LDFLAGS_PCRE2@
 CFLAGS.readline = @CFLAGS_READLINE@
 LDFLAGS.rt = @LDFLAGS_RT@
 LDFLAGS.icu = @LDFLAGS_ICU@
@@ -145,6 +147,7 @@ LDFLAGS.libsqlite3 = \
   $(LDFLAGS.rpath) $(LDFLAGS.pthread) \
   $(LDFLAGS.math) $(LDFLAGS.dlopen) \
   $(LDFLAGS.zlib) $(LDFLAGS.icu) \
+  $(LDFLAGS.migemo) $(LDFLAGS.pcre2) \
   $(LDFLAGS.rt) $(LDFLAGS.configure)
 CFLAGS.libsqlite3 = -I. $(CFLAGS.core) $(CFLAGS.icu) $(OPT_FEATURE_FLAGS)
 
@@ -304,7 +307,7 @@ DIST_FILES := \
 # that tool/mkautoconfamal.sh knows how to find it.
 #
 dist_name = sqlite-$(PACKAGE_VERSION)
-dist_tarball = $(dist_name).tar.gz
+dist_tarball = $(dist_name).tar.xz
 dist:
 	rm -fr $(dist_name)
 	mkdir -p $(dist_name)
