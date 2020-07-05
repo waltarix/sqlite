@@ -1,5 +1,5 @@
 This directory contains components used to build an autoconf-like
-package of the SQLite amalgamation: sqlite-autoconf-30XXXXXX.tar.gz
+package of the SQLite amalgamation: sqlite-autoconf-30XXXXXX.tar.xz
 
 To build the autoconf amalgamation, run from the top of the canonical
 source tree:

@@ -181,6 +181,8 @@ CFLAGS.readline ?= -I$(prefix)/include
 # SHELL_OPT += -DHAVE_LINENOISE=1
 # CFLAGS.readline = -I$(HOME)/linenoise $(HOME)/linenoise/linenoise.c
 # LDFLAGS.readline = # empty
+LDFLAGS.migemo ?=
+LDFLAGS.pcre2 ?=
 
 #
 #
@@ -557,7 +559,7 @@ LIBOBJS0 = alter.o analyze.o attach.o auth.o \
          vdbe.o vdbeapi.o vdbeaux.o vdbeblob.o vdbemem.o vdbesort.o \
          vdbetrace.o vdbevtab.o vtab.o \
          wal.o walker.o where.o wherecode.o whereexpr.o \
-         window.o
+         window.o migemo.o
 LIBOBJS = $(LIBOBJS0)
 
 #
@@ -718,6 +720,8 @@ SRC += \
   $(TOP)/ext/rbu/sqlite3rbu.c
 SRC += \
   $(TOP)/ext/misc/stmt.c
+SRC += \
+  $(TOP)/ext/misc/migemo.c
 
 # Generated source code files
 #
@@ -2092,7 +2096,7 @@ checksymbols: sqlite3.o
 	echo '0 errors out of 1 tests'
 
 # Build the amalgamation-autoconf package.  The amalgamation-tarball target builds
-# a tarball named for the version number.  Ex:  sqlite-autoconf-3110000.tar.gz.
+# a tarball named for the version number.  Ex:  sqlite-autoconf-3110000.tar.xz.
 # The snapshot-tarball target builds a tarball named by the SHA3 hash
 #
 amalgamation-tarball: sqlite3.c sqlite3rc.h
@@ -2114,7 +2118,7 @@ sqlite-amalgamation.zip:	$(TOP)/tool/mkamalzip.tcl sqlite3.c sqlite3.h shell.c s
 # Build all the source code deliverables
 #
 src-archives: sqlite-amalgamation.zip amalgamation-tarball sqlite-src.zip
-	ls -ltr *.zip *.tar.gz | tail -3
+	ls -ltr *.zip *.tar.xz | tail -3
 
 # Build a ZIP archive containing various command-line tools.
 #
@@ -2437,6 +2441,9 @@ sqlite3session.o:	$(TOP)/ext/session/sqlite3session.c $(DEPS_EXT_COMMON)
 stmt.o:	$(TOP)/ext/misc/stmt.c $(DEPS_EXT_COMMON)
 	$(T.cc.extension) -c $(TOP)/ext/misc/stmt.c
 
+migemo.o:	$(TOP)/ext/misc/migemo.c $(DEPS_EXT_COMMON)
+	$(T.cc.extension) -c $(TOP)/ext/misc/migemo.c
+
 #
 # Windows section
 #
@@ -2490,7 +2497,7 @@ tidy:
 	rm -f *.o *.obj *.c *.da *.bb *.bbg gmon.* *.rws sqlite3$(T.exe)
 	rm -f fts5.h keywordhash.h opcodes.h sqlite3.h sqlite3ext.h sqlite3session.h
 	rm -rf .libs .deps tsrc .target_source
-	rm -f lemon$(B.exe) sqlite*.tar.gz
+	rm -f lemon$(B.exe) sqlite*.tar.[gx]z
 	rm -f mkkeywordhash$(B.exe) mksourceid$(B.exe)
 	rm -f parse.* fts5parse.*
 	rm -f $(libsqlite3.DLL) $(libsqlite3.LIB) $(libtclsqlite3.DLL) libsqlite3$(T.dll).a

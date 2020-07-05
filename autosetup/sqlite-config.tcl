@@ -223,6 +223,7 @@ proc sqlite-configure {buildMode configScript} {
         dbpage               => {Enable the sqlite3_dbpage extension}
         dbstat               => {Enable the sqlite3_dbstat extension}
         carray=1             => {Disable the CARRAY extension}
+        migemo               => {Enable the MIGEMO extension}
         all=$::sqliteConfig(all-flag-default) => {$allFlagHelp}
         largefile=1
           => {This legacy flag has no effect on the library but may influence
@@ -518,6 +519,7 @@ proc sqlite-configure-finalize {} {
   sqlite-handle-load-extension
   sqlite-handle-math
   sqlite-handle-icu
+  sqlite-handle-migemo
   if {[proj-opt-exists readline]} {
     sqlite-handle-line-editing
   }
@@ -778,6 +780,13 @@ proc sqlite-handle-common-feature-flags {} {
     rtree        -DSQLITE_ENABLE_RTREE   {}
     session      {-DSQLITE_ENABLE_SESSION -DSQLITE_ENABLE_PREUPDATE_HOOK} {}
     update-limit -DSQLITE_ENABLE_UPDATE_DELETE_LIMIT {}
+    migemo       {} {
+      if {"" ne [get-define LDFLAGS_MIGEMO ""]} {
+        expr 1
+      } else {
+        expr 0
+      }
+    }
     memsys5      -DSQLITE_ENABLE_MEMSYS5 {}
     memsys3      {} {
       if {[opt-bool memsys5]} {
@@ -2233,5 +2242,31 @@ proc sqlite-dump-defines {} {
       undefine OPT_FEATURE_FLAGS.list
       undefine OPT_SHELL.list
     }
+  }
+}
+
+proc sqlite-handle-migemo {} {
+  proj-if-opt-truthy migemo {
+    cc-check-includes migemo.h
+    proj-check-function-in-lib migemo_open migemo
+    if {[have-feature migemo_open]} {
+      define LDFLAGS_MIGEMO [get-define lib_migemo_open]
+      undefine lib_migemo_open
+      sqlite-add-feature-flag -DSQLITE_ENABLE_MIGEMO
+      msg-result "Enabling migemo SQL functions [get-define LDFLAGS_MIGEMO]"
+    }
+
+    cc-with { -declare {#define PCRE2_CODE_UNIT_WIDTH 8} } {
+      proj-check-function-in-lib pcre2_jit_compile_8 pcre2-8
+    }
+    if {[have-feature pcre2_jit_compile_8]} {
+      define LDFLAGS_PCRE2 [get-define lib_pcre2_jit_compile_8]
+      undefine lib_pcre2_jit_compile_8
+      sqlite-add-feature-flag -DSQLITE_PCRE2_JIT
+      msg-result "Enabling pcre2 functions [get-define LDFLAGS_PCRE2]"
+    }
+  } {
+    define LDFLAGS_MIGEMO ""
+    define LDFLAGS_PCRE2 ""
   }
 }

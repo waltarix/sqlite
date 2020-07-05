@@ -269,6 +269,12 @@ static void set_options(Tcl_Interp *interp){
   Tcl_SetVar2(interp, "sqlite_options", "json1", "0", TCL_GLOBAL_ONLY);
 #endif
 
+#ifdef SQLITE_ENABLE_MIGEMO
+  Tcl_SetVar2(interp, "sqlite_options", "migemo", "1", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "migemo", "0", TCL_GLOBAL_ONLY);
+#endif
+
   Tcl_SetVar2(interp, "sqlite_options", "has_codec", "0", TCL_GLOBAL_ONLY);
 
 #ifdef SQLITE_LIKE_DOESNT_MATCH_BLOBS
