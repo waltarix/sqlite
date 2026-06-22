@@ -102,6 +102,7 @@ proc teaish-options {} {
     geopoly              => {Enable the GEOPOLY extension}
     rtree                => {Enable the RTREE extension}
     session              => {Enable the SESSION extension}
+    migemo               => {Enable the MIGEMO extension}
     all=1                => {Disable $::sqlite__Config(all-flag-enables)}
     with-icu-ldflags:LDFLAGS
       => {Enable SQLITE_ENABLE_ICU and add the given linker flags for the

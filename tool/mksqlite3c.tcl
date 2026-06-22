@@ -485,6 +485,7 @@ set flist {
    fts3_unicode2.c
 
    json.c
+   migemo.c
    rtree.c
    icu.c
    fts3_icu.c
